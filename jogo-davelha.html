@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="pt-br">
+ <head></head> 
+ <body> 
+  <h1> Hello </h1> 
+  <div>
+    This is a html example from Dcoder, 
+   <br> have fun. :) 
+  </div> 
+ 
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo da Velha</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        .board {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-template-rows: repeat(3, 100px);
+            gap: 10px;
+            margin: 20px auto;
+        }
+        .cell {
+            width: 100px;
+            height: 100px;
+            background-color: lightgray;
+            font-size: 36px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+        .message {
+            font-size: 20px;
+            margin-top: 20px;
+        }
+        .reset-btn {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+
+
+
+    <h1>Jogo da Velha</h1>
+    <p>Jogue com um amigo!</p>
+
+    <div class="board" id="board">
+        <div class="cell" data-index="0"></div>
+        <div class="cell" data-index="1"></div>
+        <div class="cell" data-index="2"></div>
+        <div class="cell" data-index="3"></div>
+        <div class="cell" data-index="4"></div>
+        <div class="cell" data-index="5"></div>
+        <div class="cell" data-index="6"></div>
+        <div class="cell" data-index="7"></div>
+        <div class="cell" data-index="8"></div>
+    </div>
+
+    <p class="message" id="message">É a vez do jogador X!</p>
+
+    <button class="reset-btn" onclick="resetGame()">Reiniciar Jogo</button>
+
+    <script>
+        const board = document.getElementById('board');
+        const cells = document.querySelectorAll('.cell');
+        const message = document.getElementById('message');
+        let currentPlayer = 'X';
+        let gameBoard = ['', '', '', '', '', '', '', '', ''];
+        let gameActive = true;
+
+        // Função para verificar a vitória
+        const checkWinner = () => {
+            const winningCombinations = [
+                [0, 1, 2],
+                [3, 4, 5],
+                [6, 7, 8],
+                [0, 3, 6],
+                [1, 4, 7],
+                [2, 5, 8],
+                [0, 4, 8],
+                [2, 4, 6],
+            ];
+
+            for (let combination of winningCombinations) {
+                const [a, b, c] = combination;
+                if (gameBoard[a] && gameBoard[a] === gameBoard[b] && gameBoard[a] === gameBoard[c]) {
+                    gameActive = false;
+                    message.textContent = `Jogador ${currentPlayer} venceu!`;
+                    return;
+                }
+            }
+
+            if (!gameBoard.includes('')) {
+                gameActive = false;
+                message.textContent = 'Empate!';
+            }
+        };
+
+        // Função para realizar a jogada
+        const handleCellClick = (e) => {
+            const index = e.target.getAttribute('data-index');
+            if (gameBoard[index] !== '' || !gameActive) return;
+
+            gameBoard[index] = currentPlayer;
+            e.target.textContent = currentPlayer;
+
+            checkWinner();
+
+            // Alterna o jogador
+            currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+            message.textContent = `É a vez do jogador ${currentPlayer}!`;
+        };
+
+        // Adiciona evento de clique em cada célula
+        cells.forEach(cell => {
+            cell.addEventListener('click', handleCellClick);
+        });
+
+        // Função para reiniciar o jogo
+        const resetGame = () => {
+            gameBoard = ['', '', '', '', '', '', '', '', ''];
+            gameActive = true;
+            currentPlayer = 'X';
+            message.textContent = `É a vez do jogador ${currentPlayer}!`;
+            cells.forEach(cell => {
+                cell.textContent = '';
+            });
+        };
+    </script>
+
+</body></html> 
+
+
